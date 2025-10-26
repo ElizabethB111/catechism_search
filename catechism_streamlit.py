@@ -11,7 +11,7 @@ import os
 
 # Professional page config
 st.set_page_config(
-    page_title="Catechism AI Search",
+    page_title="Catechism Search",
     page_icon="📚",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -199,11 +199,11 @@ def main():
     
     # Search execution
     if query:
-        with st.spinner("🔍 Searching 3,260 Catechism paragraphs with AI..."):
+        with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5)
         
         if results:
-            st.success(f"✅ Found {len(results)} highly relevant results")
+            st.success(f"✅ Found {len(results)} relevant Catechism passages")
             
             # Display results
             for result in results:
@@ -221,7 +221,7 @@ def main():
     st.markdown("---")
     st.markdown("""
     <div class="footer">
-        <strong>Catechism AI Search Platform</strong><br>
+        <strong>Catechism Search Platform</strong><br>
         Powered by Sentence Transformers • FAISS Vector Search • Hybrid AI Algorithms<br>
         Processing 3,260 Catechism paragraphs with enterprise-grade accuracy
     </div>
