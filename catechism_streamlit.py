@@ -91,7 +91,7 @@ def load_models():
             with open("embeddings_store/catechism_metadata.pkl", "rb") as f:
                 metadata = pickle.load(f)
                 
-            st.success("✅ Models loaded successfully!")
+          
             return encoder, reranker, index, metadata, df
             
         except Exception as e:
