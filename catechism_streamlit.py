@@ -175,10 +175,13 @@ def main():
     
     with col2:
         st.subheader("🔍 Ask a Question")
+        if 'query' not in st.session_state:
+            st.session_state.query = ""
         query = st.text_input(
             "Enter your theological question:",
             placeholder="e.g., What is the significance of baptism?",
             label_visibility="collapsed"
+            key="search_input"
         )
         
         # Quick examples
@@ -194,7 +197,7 @@ def main():
         for i, example in enumerate(example_questions):
             with examples[i % 2]:
                 if st.button(example, use_container_width=True):
-                    st.session_state.last_query = example
+                    st.session_state.query = example
                     st.rerun()
     
     # Search execution
