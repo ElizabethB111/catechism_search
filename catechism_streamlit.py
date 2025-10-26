@@ -180,7 +180,7 @@ def main():
         query = st.text_input(
             "Enter your theological question:",
             placeholder="e.g., What is the significance of baptism?",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
             key="search_input"
         )
         
