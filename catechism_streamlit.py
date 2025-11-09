@@ -17,15 +17,14 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# === Custom CSS for professional look ===
+# === Custom CSS ===
 st.markdown("""
 <style>
     .main-header {
         font-size: 3rem;
         color: #1f3d7a;
-        text-align: center;
-        margin-bottom: 0.5rem;
         font-weight: 700;
+        margin: 0;
     }
     .sub-header {
         font-size: 1.2rem;
@@ -124,7 +123,7 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         for i in set(semantic_scores.keys()) | set(bm25_scores.keys()):
             sem = semantic_scores.get(i, 0)
             lex = bm25_scores.get(i, 0)
-            all_scores[i] = 0.7 * sem + 0.3 * lex  # Weight towards semantic
+            all_scores[i] = 0.7 * sem + 0.3 * lex
 
         # Top candidates
         top_candidates = sorted(all_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
@@ -155,14 +154,14 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
 # === Main App ===
 def main():
-    # Header with Church icon
+    # Top header with Church icon
     st.markdown(f"""
-        <h1 class="main-header">
+        <div style="display:flex; align-items:center; justify-content:center; margin-bottom:0.5rem;">
             <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-church-50.png"
                  width="50"
-                 style="vertical-align:middle; margin-right:10px;">
-            Catechism Search
-        </h1>
+                 style="margin-right:15px;">
+            <h1 class="main-header">Catechism Search</h1>
+        </div>
         <p class="sub-header">A Semantic Study Tool for the Catechism of the Catholic Church</p>
     """, unsafe_allow_html=True)
 
@@ -178,14 +177,14 @@ def main():
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
-        # Ask a Question header with Bible icon
+        # Ask a Question header with Bible icon, matching top header style
         st.markdown(f"""
-            <h3 style="display:flex; align-items:center;">
-                <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png" 
-                     width="40" 
-                     style="margin-right:10px;">
-                Ask a Question
-            </h3>
+            <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1rem;">
+                <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png"
+                     width="50"
+                     style="margin-right:15px;">
+                <h1 class="main-header">Ask a Question</h1>
+            </div>
         """, unsafe_allow_html=True)
 
         # Query input
