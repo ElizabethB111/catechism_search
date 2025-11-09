@@ -199,7 +199,7 @@ def main():
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
-            "What happens after death?",
+            "What is the communion of the saints?",
             "How can I pray?",
             "What is the purpose of the sacraments?",
             "How does one make a good confession?"
