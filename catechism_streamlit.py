@@ -21,7 +21,7 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
-        font-size: 4rem;
+        font-size: 3rem;
         color: #1f3d7a;
         font-weight: 700;
         margin: 0;
@@ -177,7 +177,7 @@ def main():
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
-        # Ask a Question header with Bible icon, matching top header style
+        # Ask a Question header with Bible icon
         st.markdown(f"""
             <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1rem;">
                 <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png"
@@ -187,17 +187,11 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-        # Query input
+        # Initialize query in session state
         if 'query' not in st.session_state:
             st.session_state.query = ""
-        query = st.text_input(
-            "Enter your theological question:",
-            placeholder="e.g., What is the significance of baptism?",
-            label_visibility="collapsed",
-            key="search_input"
-        )
 
-        # Quick examples
+        # Quick example buttons
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
@@ -209,14 +203,24 @@ def main():
 
         for i, example in enumerate(example_questions):
             with examples[i % 2]:
-                if st.button(example, use_container_width=True):
+                if st.button(example, key=f"example_{i}"):
                     st.session_state.query = example
-                    st.rerun()
+                    st.experimental_rerun()  # Immediately rerun with new query
+
+        # Text input uses session_state
+        query = st.text_input(
+            "Enter your theological question:",
+            value=st.session_state.query,
+            placeholder="e.g., What is the significance of baptism?",
+            label_visibility="collapsed",
+            key="search_input"
+        )
+        st.session_state.query = query  # keep input synced
 
     # Search execution
-    if query:
+    if st.session_state.query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
-            results = hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5)
+            results = hybrid_search(st.session_state.query, encoder, reranker, index, metadata, bm25, top_k=5)
 
         if results:
             st.success(f"Found {len(results)} relevant Catechism passages")
@@ -244,4 +248,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
