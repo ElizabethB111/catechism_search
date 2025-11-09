@@ -9,7 +9,7 @@ from rank_bm25 import BM25Okapi
 import re
 import os
 
-# Page config
+# === Page config ===
 st.set_page_config(
     page_title="Catechism Search",
     page_icon="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-catholic-50%203.png",
@@ -17,8 +17,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-
-# Custom CSS for professional look
+# === Custom CSS for professional look ===
 st.markdown("""
 <style>
     .main-header {
@@ -72,33 +71,30 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# === Load models ===
 @st.cache_resource
 def load_models():
-    """Load models with caching for performance"""
     with st.spinner("🔄 Loading Catechism database..."):
         try:
-            # Load data
             df = pd.read_csv("catechism_corpus_clean.csv")
             df.dropna(subset=["text"], inplace=True)
-            
-            # Load models
+
             encoder = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
             reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
-            
-            # Load pre-computed embeddings
+
             embeddings = np.load("embeddings_store/catechism_embeddings.npy")
             index = faiss.read_index("embeddings_store/catechism_faiss.index")
-            
+
             with open("embeddings_store/catechism_metadata.pkl", "rb") as f:
                 metadata = pickle.load(f)
-                
-          
+
             return encoder, reranker, index, metadata, df
-            
+
         except Exception as e:
             st.error(f"❌ Error loading models: {str(e)}")
             return None, None, None, None, None
 
+# === Tokenization & BM25 setup ===
 def simple_tokenize(text):
     tokens = re.findall(r'\b\w+\b', text.lower())
     basic_stopwords = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for'}
@@ -109,8 +105,8 @@ def setup_bm25(metadata):
     tokenized_corpus = [simple_tokenize(t) for t in metadata["text"]]
     return BM25Okapi(tokenized_corpus)
 
+# === Hybrid Search Function ===
 def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
-    """Search function optimized for performance"""
     try:
         # Semantic search
         query_emb = encoder.encode(query, normalize_embeddings=True, convert_to_numpy=True)
@@ -130,7 +126,7 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
             lex = bm25_scores.get(i, 0)
             all_scores[i] = 0.7 * sem + 0.3 * lex  # Weight towards semantic
 
-        # Get top candidates
+        # Top candidates
         top_candidates = sorted(all_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
         candidate_pairs = [(query, metadata["text"][i]) for i, _ in top_candidates]
 
@@ -138,7 +134,7 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         if candidate_pairs:
             rerank_scores = reranker.predict(candidate_pairs)
             reranked = sorted(zip([i for i, _ in top_candidates], rerank_scores), 
-                            key=lambda x: x[1], reverse=True)
+                              key=lambda x: x[1], reverse=True)
         else:
             reranked = []
 
@@ -152,61 +148,56 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
                 "score": float(score)
             })
         return results
-        
+
     except Exception as e:
         st.error(f"Search error: {str(e)}")
         return []
 
+# === Main App ===
 def main():
-   
-    # Professional header
+    # Header with Church icon
     st.markdown(f"""
-    <h1 class="main-header">
-        <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-church-50.png"
-             width="50"
-             style="vertical-align:middle; margin-right:10px;">
-        Catechism Search
-    </h1>
-    <p class="sub-header">A Semantic Study Tool for the Catechism of the Catholic Church</p>
+        <h1 class="main-header">
+            <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-church-50.png"
+                 width="50"
+                 style="vertical-align:middle; margin-right:10px;">
+            Catechism Search
+        </h1>
+        <p class="sub-header">A Semantic Study Tool for the Catechism of the Catholic Church</p>
     """, unsafe_allow_html=True)
 
-
-    
     # Load models
     encoder, reranker, index, metadata, df = load_models()
-    
     if encoder is None:
         st.error("Failed to load required models. Please check if all data files are available.")
         return
-    
+
     bm25 = setup_bm25(metadata)
-    
+
     # Search interface
     col1, col2, col3 = st.columns([1, 2, 1])
 
-
-       with col2:
-           st.markdown(f"""
-               <h3 style="display:flex; align-items:center;">
-                   <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png" 
-                        width="40" 
-                        style="margin-right:10px;">
+    with col2:
+        # Ask a Question header with Bible icon
+        st.markdown(f"""
+            <h3 style="display:flex; align-items:center;">
+                <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png" 
+                     width="40" 
+                     style="margin-right:10px;">
                 Ask a Question
-               </h3>
-           """, unsafe_allow_html=True)
+            </h3>
+        """, unsafe_allow_html=True)
 
-           if 'query' not in st.session_state:
-               st.session_state.query = ""
-           query = st.text_input(
-               "Enter your theological question:",
-               placeholder="e.g., What is the significance of baptism?",
-               label_visibility="collapsed",
-               key="search_input"
-           )
+        # Query input
+        if 'query' not in st.session_state:
+            st.session_state.query = ""
+        query = st.text_input(
+            "Enter your theological question:",
+            placeholder="e.g., What is the significance of baptism?",
+            label_visibility="collapsed",
+            key="search_input"
+        )
 
-
-
-        
         # Quick examples
         st.write("**Quick Examples:**")
         examples = st.columns(2)
@@ -216,42 +207,42 @@ def main():
             "What is the purpose of the sacraments?",
             "How does one make a good confession?"
         ]
-        
+
         for i, example in enumerate(example_questions):
             with examples[i % 2]:
                 if st.button(example, use_container_width=True):
                     st.session_state.query = example
                     st.rerun()
-    
+
     # Search execution
     if query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5)
-        
+
         if results:
             st.success(f"Found {len(results)} relevant Catechism passages")
-            
-            # Display results
+
             for result in results:
                 with st.container():
                     st.markdown(f'<div class="result-card">', unsafe_allow_html=True)
                     st.markdown(f'<span class="paragraph-badge">Paragraph {result["paragraph"]}</span>', unsafe_allow_html=True)
                     st.markdown(f'<span class="confidence-badge">Confidence: {result["score"]:.1%}</span>', unsafe_allow_html=True)
-                    st.write("")  # Spacing
+                    st.write("")  # spacing
                     st.write(result["text"])
                     st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.warning("No results found. Try rephrasing your question or using different keywords.")
-    
-    # Professional footer
+
+    # Footer
     st.markdown("---")
     st.markdown("""
-    <div class="footer">
-        <strong>Catechism Search Platform</strong><br>
-        A resource for deepening understanding of the Catholic faith<br>
-        Integrating semantic search methods (Sentence Transformers, FAISS, BM25)
-    </div>
+        <div class="footer">
+            <strong>Catechism Search Platform</strong><br>
+            A resource for deepening understanding of the Catholic faith<br>
+            Integrating semantic search methods (Sentence Transformers, FAISS, BM25)
+        </div>
     """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
+
