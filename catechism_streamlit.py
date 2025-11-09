@@ -183,17 +183,29 @@ def main():
     
     # Search interface
     col1, col2, col3 = st.columns([1, 2, 1])
-    
-    with col2:
-        st.subheader("Ask a Question")
-        if 'query' not in st.session_state:
-            st.session_state.query = ""
-        query = st.text_input(
-            "Enter your theological question:",
-            placeholder="e.g., What is the significance of baptism?",
-            label_visibility="collapsed",
-            key="search_input"
-        )
+
+
+       with col2:
+           st.markdown(f"""
+               <h3 style="display:flex; align-items:center;">
+                   <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png" 
+                        width="40" 
+                        style="margin-right:10px;">
+                Ask a Question
+               </h3>
+           """, unsafe_allow_html=True)
+
+           if 'query' not in st.session_state:
+               st.session_state.query = ""
+           query = st.text_input(
+               "Enter your theological question:",
+               placeholder="e.g., What is the significance of baptism?",
+               label_visibility="collapsed",
+               key="search_input"
+           )
+
+
+
         
         # Quick examples
         st.write("**Quick Examples:**")
