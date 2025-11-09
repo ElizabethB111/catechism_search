@@ -12,7 +12,7 @@ import os
 # Professional page config
 st.set_page_config(
     page_title="Catechism Search",
-    page_icon="📚",
+    page_icon="icons8-catholic-50.png",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
