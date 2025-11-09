@@ -158,8 +158,9 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
 def main():
     # Professional header
-    st.markdown('<h1 class="main-header">📚 Catechism AI Search</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Enterprise Semantic Search Platform • Catechism of the Catholic Church</p>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header">✝️ Catechism Search</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">A Semantic Study Tool for the Catechism of the Catholic Church</p>', unsafe_allow_html=True)
+
     
     # Load models
     encoder, reranker, index, metadata, df = load_models()
