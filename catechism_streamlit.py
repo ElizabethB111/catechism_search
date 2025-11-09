@@ -107,29 +107,24 @@ def setup_bm25(metadata):
 # === Hybrid Search Function ===
 def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
     try:
-        # Semantic search
         query_emb = encoder.encode(query, normalize_embeddings=True, convert_to_numpy=True)
         D, I = index.search(np.array([query_emb]), top_k * 3)
         semantic_scores = {i: float(D[0][rank]) for rank, i in enumerate(I[0])}
 
-        # Lexical search
         tokenized_q = simple_tokenize(query)
         bm25_scores_all = bm25.get_scores(tokenized_q)
         bm25_top = np.argsort(bm25_scores_all)[::-1][:top_k * 3]
         bm25_scores = {i: float(bm25_scores_all[i]) for i in bm25_top}
 
-        # Combine scores
         all_scores = {}
         for i in set(semantic_scores.keys()) | set(bm25_scores.keys()):
             sem = semantic_scores.get(i, 0)
             lex = bm25_scores.get(i, 0)
             all_scores[i] = 0.7 * sem + 0.3 * lex
 
-        # Top candidates
         top_candidates = sorted(all_scores.items(), key=lambda x: x[1], reverse=True)[:top_k]
         candidate_pairs = [(query, metadata["text"][i]) for i, _ in top_candidates]
 
-        # Rerank
         if candidate_pairs:
             rerank_scores = reranker.predict(candidate_pairs)
             reranked = sorted(zip([i for i, _ in top_candidates], rerank_scores), 
@@ -137,7 +132,6 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         else:
             reranked = []
 
-        # Format results
         results = []
         for rank, (idx, score) in enumerate(reranked, start=1):
             results.append({
@@ -191,7 +185,17 @@ def main():
         if 'query' not in st.session_state:
             st.session_state.query = ""
 
-        # Quick example buttons
+        # Text input
+        query = st.text_input(
+            "Enter your theological question:",
+            value=st.session_state.query,
+            placeholder="e.g., What is the significance of baptism?",
+            label_visibility="collapsed",
+            key="search_input"
+        )
+        st.session_state.query = query
+
+        # Quick example buttons under input
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
@@ -204,18 +208,8 @@ def main():
         for i, example in enumerate(example_questions):
             with examples[i % 2]:
                 if st.button(example, key=f"example_{i}"):
-                    st.session_state.query = example
-                    st.experimental_rerun()  # Immediately rerun with new query
-
-        # Text input uses session_state
-        query = st.text_input(
-            "Enter your theological question:",
-            value=st.session_state.query,
-            placeholder="e.g., What is the significance of baptism?",
-            label_visibility="collapsed",
-            key="search_input"
-        )
-        st.session_state.query = query  # keep input synced
+                    st.session_state.query = example  # fill input
+                    # search will run naturally on next rerun
 
     # Search execution
     if st.session_state.query:
@@ -248,5 +242,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
