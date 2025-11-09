@@ -74,7 +74,7 @@ st.markdown("""
 @st.cache_resource
 def load_models():
     """Load models with caching for performance"""
-    with st.spinner("🔄 Loading AI models and Catechism database..."):
+    with st.spinner("🔄 Loading Catechism database..."):
         try:
             # Load data
             df = pd.read_csv("catechism_corpus_clean.csv")
@@ -174,7 +174,7 @@ def main():
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
-        st.subheader("🔍 Ask a Question")
+        st.subheader("Ask a Question")
         if 'query' not in st.session_state:
             st.session_state.query = ""
         query = st.text_input(
@@ -206,7 +206,7 @@ def main():
             results = hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5)
         
         if results:
-            st.success(f"✅ Found {len(results)} relevant Catechism passages")
+            st.success(f"Found {len(results)} relevant Catechism passages")
             
             # Display results
             for result in results:
@@ -226,7 +226,7 @@ def main():
     <div class="footer">
         <strong>Catechism Search Platform</strong><br>
         Powered by Sentence Transformers • FAISS Vector Search • Hybrid AI Algorithms<br>
-        Processing 3,260 Catechism paragraphs with enterprise-grade accuracy
+        Enabling intelligent retrieval across 3,260 Catechism passages
     </div>
     """, unsafe_allow_html=True)
 
