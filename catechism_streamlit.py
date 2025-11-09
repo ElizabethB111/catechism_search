@@ -199,8 +199,8 @@ def main():
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
-            "What is the meaning of the resurrection?",
-            "Why do Catholics venerate Mary?",
+            "What happens after death?",
+            "How can I pray?",
             "What is the purpose of the sacraments?",
             "How does one make a good confession?"
         ]
