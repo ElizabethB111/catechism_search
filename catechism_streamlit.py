@@ -158,10 +158,15 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
 def main():
     # Professional header
-    st.markdown('<h1 class="main-header">
+   
+    # Professional header
+    st.markdown(f"""
+    <h1 class="main-header">
         <img src="assets/icons8-catholic-50.png" width="50" style="vertical-align:middle; margin-right:10px;">
-        Catechism Search</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">A Semantic Study Tool for the Catechism of the Catholic Church</p>', unsafe_allow_html=True)
+        Catechism Search
+    </h1>
+    <p class="sub-header">A Semantic Study Tool for the Catechism of the Catholic Church</p>
+    """, unsafe_allow_html=True)
 
     
     # Load models
