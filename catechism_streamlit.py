@@ -225,8 +225,8 @@ def main():
     st.markdown("""
     <div class="footer">
         <strong>Catechism Search Platform</strong><br>
-        Powered by Sentence Transformers • FAISS Vector Search • Hybrid AI Algorithms<br>
-        Enabling intelligent retrieval across 3,260 Catechism passages
+        A resource for deepening understanding of the Catholic faith<br>
+        Integrating semantic search methods (Sentence Transformers, FAISS, BM25)
     </div>
     """, unsafe_allow_html=True)
 
