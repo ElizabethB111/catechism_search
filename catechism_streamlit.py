@@ -9,13 +9,14 @@ from rank_bm25 import BM25Okapi
 import re
 import os
 
-# Professional page config
+# Page config
 st.set_page_config(
     page_title="Catechism Search",
-    page_icon="icons8-catholic-50.png",
+    page_icon="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-catholic-50%203.png",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
 
 # Custom CSS for professional look
 st.markdown("""
