@@ -59,32 +59,38 @@ set_background("Pentecost_wp.jpg")
 # === Custom CSS ===
 st.markdown("""
 <style>
+    /* Global light text */
+    body, .stApp, .main > div {
+        color: #f0f0f0 !important;
+    }
+
     .main-header {
         font-size: 3rem;
-        color: #ffffff;
+        color: #f8f8ff;
         font-weight: 700;
         margin: 0;
         text-shadow: 1px 1px 3px black;
     }
     .sub-header {
         font-size: 1.2rem;
-        color: #e6e6e6;
+        color: #f0f0f0;
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 300;
         text-shadow: 1px 1px 2px black;
     }
     .result-card {
-        background-color: rgba(255,255,255,0.9);
+        background-color: rgba(255,255,255,0.85);
         border-left: 4px solid #1f3d7a;
         padding: 1.5rem;
         margin: 1rem 0;
         border-radius: 0 8px 8px 0;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        color: #111;  /* lighter but readable on white card */
     }
     .paragraph-badge {
         background-color: #1f3d7a;
-        color: white;
+        color: #ffffff;
         padding: 0.3rem 0.8rem;
         border-radius: 15px;
         font-weight: bold;
@@ -94,7 +100,7 @@ st.markdown("""
     }
     .confidence-badge {
         background-color: #28a745;
-        color: white;
+        color: #ffffff;
         padding: 0.3rem 0.8rem;
         border-radius: 15px;
         font-size: 0.9rem;
@@ -105,7 +111,7 @@ st.markdown("""
         text-align: center;
         margin-top: 3rem;
         padding: 1rem;
-        color: #e6e6e6;
+        color: #f0f0f0;
         text-shadow: 1px 1px 2px black;
     }
 </style>
@@ -279,6 +285,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
