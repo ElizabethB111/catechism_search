@@ -103,6 +103,21 @@ st.markdown("""
         color: #111 !important;
         font-weight: 600;
     }
+
+    /* Slider styling */
+    [data-testid="stSlider"] label {
+        color: #f0f0f0 !important;
+        font-weight: bold;
+    }
+    [data-testid="stSlider"] .css-1r6slb0 {
+        background: #1f3d7a !important;
+    }
+    [data-testid="stSlider"] input[type="range"]::-webkit-slider-thumb {
+        background: #28a745 !important;
+    }
+    [data-testid="stSlider"] input[type="range"]::-moz-range-thumb {
+        background: #28a745 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -218,8 +233,13 @@ def main():
         )
         st.session_state.query = query
 
-        # Number of results slider
-        num_results = st.slider("Number of results to return", min_value=1, max_value=20, value=5)
+        # Slider for number of results
+        num_results = st.slider(
+            "Number of results to return",
+            min_value=1,
+            max_value=20,
+            value=5
+        )
 
         # Example buttons
         st.write("**Quick Examples:**")
