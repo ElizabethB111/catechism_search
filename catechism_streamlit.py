@@ -279,7 +279,7 @@ def main():
             "What is the purpose of the sacraments?",
             "How can I make a good confession?",
             "What is human dignity?",
-            "What is the significance of the communion of saints?"
+            "What is the communion of saints?"
         ]
 
         for i, example in enumerate(example_questions):
