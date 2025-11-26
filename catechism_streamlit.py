@@ -87,7 +87,6 @@ st.markdown("""
         margin: 1rem 0;
         border-radius: 0 8px 8px 0;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        color: #111;
     }
     .paragraph-badge {
         background-color: #1f3d7a;
@@ -98,15 +97,6 @@ st.markdown("""
         font-size: 0.9rem;
         display: inline-block;
         margin-bottom: 0.5rem;
-    }
-    .confidence-badge {
-        background-color: #28a745;
-        color: #ffffff;
-        padding: 0.3rem 0.8rem;
-        border-radius: 15px;
-        font-size: 0.9rem;
-        display: inline-block;
-        margin-left: 0.5rem;
     }
     .footer {
         text-align: center;
@@ -178,7 +168,7 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
         rerank_scores = reranker.predict(pairs)
 
-        # Convert raw scores to probabilities using sigmoid
+        # Convert raw scores to probabilities using sigmoid (optional, not used for display now)
         prob_scores = [1 / (1 + math.exp(-s)) for s in rerank_scores]
 
         ranked = sorted(zip([i for i, _ in candidates], prob_scores), key=lambda x: x[1], reverse=True)
@@ -188,8 +178,7 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
             results.append({
                 "rank": r,
                 "paragraph": metadata["paragraph"][idx],
-                "text": metadata["text"][idx],
-                "score": float(score)
+                "text": metadata["text"][idx]
             })
         return results
 
@@ -255,7 +244,7 @@ def main():
                 if st.button(example, key=f"ex_{i}"):
                     st.session_state.query = example
 
-    # Search Results
+    # === Search Results ===
     if st.session_state.query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(
@@ -266,13 +255,16 @@ def main():
             st.success(f"Found {len(results)} relevant Catechism passages")
 
             for r in results:
-                st.markdown('<div class="result-card" style="color:#eeeeee;">', unsafe_allow_html=True)
+                st.markdown('<div class="result-card">', unsafe_allow_html=True)
                 st.markdown(
                     f'<span class="paragraph-badge">Paragraph {r["paragraph"]}</span>',
                     unsafe_allow_html=True
                 )
-            
-                st.write(r["text"])
+                # Light passage text
+                st.markdown(
+                    f'<p style="color:#f5f5f5; line-height:1.5;">{r["text"]}</p>',
+                    unsafe_allow_html=True
+                )
                 st.markdown("</div>", unsafe_allow_html=True)
 
         else:
@@ -290,6 +282,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
