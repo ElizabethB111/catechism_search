@@ -105,12 +105,25 @@ st.markdown("""
     }
 
     /* Style the slider to be white */
-    .stSlider > div > div > div {
-        color: #f8f8f8 !important;
-    }
     .stSlider label {
         color: #f8f8f8 !important;
         font-weight: 500;
+        text-shadow: 1px 1px 2px black;
+    }
+    .stSlider [data-baseweb="slider"] {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .stSlider [data-baseweb="slider"] [role="slider"] {
+        background-color: #ffffff !important;
+    }
+    .stSlider [data-baseweb="slider"] > div > div {
+        background-color: #ffffff !important;
+    }
+    .stSlider div[data-testid="stTickBar"] > div {
+        color: #f8f8f8 !important;
+    }
+    .stSlider div[data-testid="stThumbValue"] {
+        color: #f8f8f8 !important;
     }
 </style>
 """, unsafe_allow_html=True)
