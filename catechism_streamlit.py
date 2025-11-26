@@ -8,6 +8,7 @@ import faiss
 from rank_bm25 import BM25Okapi
 import re
 import base64
+import math
 
 # === Page Config ===
 st.set_page_config(
@@ -86,7 +87,7 @@ st.markdown("""
         margin: 1rem 0;
         border-radius: 0 8px 8px 0;
         box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        color: #111;  /* lighter but readable on white card */
+        color: #111;
     }
     .paragraph-badge {
         background-color: #1f3d7a;
@@ -176,7 +177,11 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         pairs = [(query, metadata["text"][i]) for i, _ in candidates]
 
         rerank_scores = reranker.predict(pairs)
-        ranked = sorted(zip([i for i, _ in candidates], rerank_scores), key=lambda x: x[1], reverse=True)
+
+        # Convert raw scores to probabilities using sigmoid
+        prob_scores = [1 / (1 + math.exp(-s)) for s in rerank_scores]
+
+        ranked = sorted(zip([i for i, _ in candidates], prob_scores), key=lambda x: x[1], reverse=True)
 
         results = []
         for r, (idx, score) in enumerate(ranked, start=1):
@@ -288,6 +293,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
