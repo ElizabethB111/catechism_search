@@ -277,7 +277,9 @@ def main():
             "What is the communion of the saints?",
             "What is God like?",
             "What is the purpose of the sacraments?",
-            "How can I make a good confession?"
+            "How can I make a good confession?",
+            "What is beauty?"
+            "Why do Catholics pray to Mary?"
         ]
 
         for i, example in enumerate(example_questions):
