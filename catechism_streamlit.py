@@ -99,17 +99,6 @@ st.markdown("""
         display: inline-block;
         margin-bottom: 0.5rem;
     }
-    .confidence-badge {
-        background-color: #2d5a27;
-        color: #ffffff;
-        padding: 0.3rem 0.8rem;
-        border-radius: 15px;
-        font-weight: bold;
-        font-size: 0.9rem;
-        display: inline-block;
-        margin-bottom: 0.5rem;
-        margin-left: 0.5rem;
-    }
     .footer {
         text-align: center;
         margin-top: 3rem;
@@ -203,14 +192,11 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         ranked = sorted(zip([i for i, _ in candidates], rerank_scores), key=lambda x: x[1], reverse=True)
 
         results = []
-        for r, (idx, score) in enumerate(ranked, start=1):
-            # Convert reranker score to percentage confidence
-            confidence = min(100, max(0, int(score * 100)))
+        for r, (idx, _) in enumerate(ranked, start=1):
             results.append({
                 "rank": r,
                 "paragraph": metadata["paragraph"][idx],
-                "text": metadata["text"][idx],
-                "confidence": confidence
+                "text": metadata["text"][idx]
             })
         return results
 
@@ -288,10 +274,12 @@ def main():
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
-            "What is the communion of the saints?",
+            "Why do Catholics pray to Mary?",
             "What is God like?",
             "What is the purpose of the sacraments?",
-            "How can I make a good confession?"
+            "How can I make a good confession?",
+            "What is human dignity?",
+            "What is the communion of saints?"
         ]
 
         for i, example in enumerate(example_questions):
@@ -316,20 +304,10 @@ def main():
             )
 
             for r in results:
-                # Determine confidence color based on percentage
-                confidence_color = "#2d5a27"  # Default green
-                if r["confidence"] < 50:
-                    confidence_color = "#7a2d2d"  # Red for low confidence
-                elif r["confidence"] < 75:
-                    confidence_color = "#7a5e2d"  # Orange for medium confidence
-                
                 st.markdown(
                     f'''
                     <div class="result-card" style="background-color: rgba(0,0,0,0.6); color: #f8f8f8; padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0;">
                         <span class="paragraph-badge">Paragraph {r["paragraph"]}</span>
-                        <span class="confidence-badge" style="background-color: {confidence_color};">
-                            {r["confidence"]}% Match
-                        </span>
                         <div style="margin-top:0.5rem; line-height:1.5;">{r["text"]}</div>
                     </div>
                     ''',
@@ -351,7 +329,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 
