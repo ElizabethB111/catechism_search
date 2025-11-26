@@ -110,20 +110,18 @@ st.markdown("""
         font-weight: 500;
         text-shadow: 1px 1px 2px black;
     }
-    .stSlider [data-baseweb="slider"] {
-        background-color: rgba(255, 255, 255, 0.3);
-    }
-    .stSlider [data-baseweb="slider"] [role="slider"] {
-        background-color: #ffffff !important;
-    }
-    .stSlider [data-baseweb="slider"] > div > div {
-        background-color: #ffffff !important;
-    }
-    .stSlider div[data-testid="stTickBar"] > div {
+    /* Change the slider track color */
+    .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"] {
         color: #f8f8f8 !important;
     }
-    .stSlider div[data-testid="stThumbValue"] {
-        color: #f8f8f8 !important;
+    /* Change the active/filled portion of the slider */
+    .stSlider [data-baseweb="slider"] > div > div > div > div {
+        background-color: #ffffff !important;
+    }
+    /* Change the slider thumb (circle) */
+    .stSlider [data-baseweb="slider"] > div > div > div > div[role="slider"] {
+        background-color: #ffffff !important;
+        box-shadow: 0 0 0 2px #ffffff !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -310,7 +308,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 
