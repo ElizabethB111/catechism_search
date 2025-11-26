@@ -8,67 +8,143 @@ import faiss
 from rank_bm25 import BM25Okapi
 import re
 import base64
-import math
 
-# === Page Config ===
+# ==========================================
+# PAGE CONFIG
+# ==========================================
 st.set_page_config(
     page_title="Catechism Search",
     page_icon="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-catholic-50%203.png",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
-# === Override theme colors via :root for slider track and thumb ===
+# ==========================================
+# CONSOLIDATED CSS — FIXES SLIDER RED COLOR
+# ==========================================
 st.markdown("""
 <style>
-:root {
-    --primary-color: #1f3d7a;   /* slider track */
-    --secondary-color: #28a745; /* slider thumb */
-}
 
-/* Slider label white */
-[data-testid="stSlider"] label {
-    color: #f0f0f0 !important;
-    font-weight: bold;
-}
+    /* ====================================
+       GLOBAL TEXT COLORS
+       ==================================== */
+    body, .stApp, .main > div {
+        color: #f0f0f0 !important;
+    }
 
-/* Full slider track & thumb override for modern browsers */
-input[type=range] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 8px;
-    background: #1f3d7a !important;
-    border-radius: 5px;
-    outline: none;
-}
+    /* ====================================
+       HEADERS
+       ==================================== */
+    .main-header {
+        font-size: 3rem;
+        color: #f8f8ff;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 1px 1px 3px black;
+    }
+    .sub-header {
+        font-size: 1.2rem;
+        color: #f0f0f0;
+        text-align: center;
+        margin-bottom: 2rem;
+        font-weight: 300;
+        text-shadow: 1px 1px 2px black;
+    }
 
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    background: #28a745 !important;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid #ffffff;
-}
+    /* ====================================
+       STREAMLIT SLIDER — FIX RED TRACK
+       ==================================== */
+    :root, [data-theme="light"], [data-theme="dark"] {
+        --st-slider-track-background: #1f3d7a !important;
+        --st-slider-track-hover-background: #1f3d7a !important;
+        --st-slider-thumb-background: #28a745 !important;
+        --st-slider-thumb-hover-background: #28a745 !important;
+    }
 
-input[type=range]::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #28a745 !important;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 2px solid #ffffff;
-}
+    /* Manually style input slider for browsers */
+    input[type=range] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
+        background: #1f3d7a !important;
+        border-radius: 5px;
+        outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        background: #28a745 !important;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #ffffff;
+    }
+    input[type=range]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        background: #28a745 !important;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #ffffff;
+    }
+
+    /* Slider label color */
+    [data-testid="stSlider"] label {
+        color: #f0f0f0 !important;
+        font-weight: bold;
+    }
+
+    /* ====================================
+       RESULTS CARDS
+       ==================================== */
+    .paragraph-badge {
+        background-color: #1f3d7a;
+        color: #ffffff;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-weight: bold;
+        font-size: 0.9rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+    }
+
+    .result-card {
+        background-color: rgba(0,0,0,0.6);
+        color: #f8f8f8;
+        padding: 1rem;
+        border-radius: 0 8px 8px 0;
+        margin: 1rem 0;
+    }
+
+    /* ====================================
+       BUTTONS
+       ==================================== */
+    .stButton>button {
+        color: #111 !important;
+        font-weight: 600;
+    }
+
+    /* ====================================
+       FOOTER
+       ==================================== */
+    .footer {
+        text-align: center;
+        margin-top: 3rem;
+        padding: 1rem;
+        color: #f0f0f0;
+        text-shadow: 1px 1px 2px black;
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
-# === Background Image ===
+# ==========================================
+# BACKGROUND IMAGE
+# ==========================================
 def set_background(image_file):
     with open(image_file, "rb") as f:
-        data = f.read()
-    encoded = base64.b64encode(data).decode()
+        encoded = base64.b64encode(f.read()).decode()
 
     st.markdown(
         f"""
@@ -95,58 +171,14 @@ def set_background(image_file):
         }}
         </style>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
 set_background("Pentecost_wp.jpg")
 
-# === Custom CSS for text, buttons, and results ===
-st.markdown("""
-<style>
-body, .stApp, .main > div {
-    color: #f0f0f0 !important;
-}
-
-.main-header {
-    font-size: 3rem;
-    color: #f8f8ff;
-    font-weight: 700;
-    margin: 0;
-    text-shadow: 1px 1px 3px black;
-}
-.sub-header {
-    font-size: 1.2rem;
-    color: #f0f0f0;
-    text-align: center;
-    margin-bottom: 2rem;
-    font-weight: 300;
-    text-shadow: 1px 1px 2px black;
-}
-.paragraph-badge {
-    background-color: #1f3d7a;
-    color: #ffffff;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    display: inline-block;
-    margin-bottom: 0.5rem;
-}
-.footer {
-    text-align: center;
-    margin-top: 3rem;
-    padding: 1rem;
-    color: #f0f0f0;
-    text-shadow: 1px 1px 2px black;
-}
-.stButton>button {
-    color: #111 !important;
-    font-weight: 600;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# === Load Models ===
+# ==========================================
+# LOAD MODELS
+# ==========================================
 @st.cache_resource
 def load_models():
     try:
@@ -168,7 +200,9 @@ def load_models():
         st.error(f"❌ Error loading models: {str(e)}")
         return None, None, None, None, None
 
-# === Tokenizer & BM25 ===
+# ==========================================
+# TOKENIZER & BM25
+# ==========================================
 def simple_tokenize(text):
     tokens = re.findall(r'\b\w+\b', text.lower())
     stopwords = {'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for'}
@@ -179,7 +213,9 @@ def setup_bm25(metadata):
     tokenized = [simple_tokenize(t) for t in metadata["text"]]
     return BM25Okapi(tokenized)
 
-# === Hybrid Search ===
+# ==========================================
+# HYBRID SEARCH ENGINE
+# ==========================================
 def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
     try:
         query_emb = encoder.encode(query, normalize_embeddings=True, convert_to_numpy=True)
@@ -188,8 +224,8 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
         tokenized_q = simple_tokenize(query)
         bm25_all = bm25.get_scores(tokenized_q)
-        bm25_top_idx = np.argsort(bm25_all)[::-1][:top_k * 3]
-        bm25_scores = {i: float(bm25_all[i]) for i in bm25_top_idx}
+        bm25_idx = np.argsort(bm25_all)[::-1][:top_k * 3]
+        bm25_scores = {i: float(bm25_all[i]) for i in bm25_idx}
 
         combined = {}
         for i in set(semantic_scores) | set(bm25_scores):
@@ -201,23 +237,25 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         rerank_scores = reranker.predict(pairs)
         ranked = sorted(zip([i for i, _ in candidates], rerank_scores), key=lambda x: x[1], reverse=True)
 
-        results = []
-        for r, (idx, _) in enumerate(ranked, start=1):
-            results.append({
-                "rank": r,
+        return [
+            {
+                "rank": r + 1,
                 "paragraph": metadata["paragraph"][idx],
-                "text": metadata["text"][idx]
-            })
-        return results
+                "text": metadata["text"][idx],
+            }
+            for r, (idx, _) in enumerate(ranked)
+        ]
 
     except Exception as e:
         st.error(f"Search error: {str(e)}")
         return []
 
-# === Main App ===
+# ==========================================
+# MAIN APP
+# ==========================================
 def main():
 
-    # Header (Catechism Search)
+    # Header
     st.markdown("""
         <div style="display:flex; align-items:center; justify-content:center; margin-bottom:0.5rem;">
             <h1 class="main-header">Catechism Search</h1>
@@ -225,7 +263,7 @@ def main():
         <p class="sub-header">&nbsp;</p>
     """, unsafe_allow_html=True)
 
-    # Load Models
+    # Load models
     encoder, reranker, index, metadata, df = load_models()
     if encoder is None:
         return
@@ -235,7 +273,6 @@ def main():
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
-        # Ask Question header (spaced down)
         st.markdown("""
             <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1rem; margin-top:2rem;">
                 <h1 class="main-header">Ask a Question</h1>
@@ -255,7 +292,6 @@ def main():
         )
         st.session_state.query = query
 
-        # Slider for number of results
         num_results = st.slider(
             "Number of results to return",
             min_value=1,
@@ -277,7 +313,7 @@ def main():
                 if st.button(example, key=f"ex_{i}"):
                     st.session_state.query = example
 
-    # === Search Results ===
+    # Search results
     if st.session_state.query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(
@@ -294,7 +330,7 @@ def main():
             for r in results:
                 st.markdown(
                     f'''
-                    <div class="result-card" style="background-color: rgba(0,0,0,0.6); color: #f8f8f8; padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0;">
+                    <div class="result-card">
                         <span class="paragraph-badge">Paragraph {r["paragraph"]}</span>
                         <div style="margin-top:0.5rem; line-height:1.5;">{r["text"]}</div>
                     </div>
@@ -315,6 +351,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
