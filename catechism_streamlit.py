@@ -20,7 +20,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# CONSOLIDATED CSS — FIXES SLIDER RED COLOR
+# CONSOLIDATED CSS — INCLUDING FINAL SLIDER FIX
 # ==========================================
 st.markdown("""
 <style>
@@ -52,16 +52,8 @@ st.markdown("""
     }
 
     /* ====================================
-       STREAMLIT SLIDER — FIX RED TRACK
+       ORIGINAL SLIDER OVERRIDES
        ==================================== */
-    :root, [data-theme="light"], [data-theme="dark"] {
-        --st-slider-track-background: #1f3d7a !important;
-        --st-slider-track-hover-background: #1f3d7a !important;
-        --st-slider-thumb-background: #28a745 !important;
-        --st-slider-thumb-hover-background: #28a745 !important;
-    }
-
-    /* Manually style input slider for browsers */
     input[type=range] {
         -webkit-appearance: none;
         width: 100%;
@@ -89,10 +81,41 @@ st.markdown("""
         border: 2px solid #ffffff;
     }
 
-    /* Slider label color */
     [data-testid="stSlider"] label {
         color: #f0f0f0 !important;
         font-weight: bold;
+    }
+
+    /* ====================================
+       STREAMLIT INTERNAL SLIDER FIX
+       THE IMPORTANT PART — THIS REMOVES ALL RED
+       ==================================== */
+
+    /* Thumb override */
+    div[data-testid="stSlider"] div[role="slider"] {
+        background: #28a745 !important;
+        border: 2px solid white !important;
+        box-shadow: none !important;
+    }
+
+    /* Track override */
+    div[data-testid="stSlider"] > div {
+        background: #1f3d7a !important;
+    }
+
+    /* Filled portions of track */
+    div[data-testid="stSlider"] .st-af {
+        background-color: #1f3d7a !important;
+    }
+    div[data-testid="stSlider"] .st-ag {
+        background-color: #1f3d7a !important;
+    }
+
+    /* Remove red highlights, warnings, focus rings */
+    div[data-testid="stSlider"] * {
+        box-shadow: none !important;
+        outline: none !important;
+        border-color: #1f3d7a !important;
     }
 
     /* ====================================
@@ -351,6 +374,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
