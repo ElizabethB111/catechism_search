@@ -1,4 +1,4 @@
-# catechism_streamlit.py
+# catechism_streamlit.py (Rewritten with blurred background & lighter text)
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -17,7 +17,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# === Background Image ===
+# === Background Image with Blur ===
 def set_background(image_file):
     with open(image_file, "rb") as f:
         data = f.read()
@@ -31,9 +31,10 @@ def set_background(image_file):
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            filter: blur(6px);
         }}
 
-        /* Dark overlay for readability */
+        /* Blur only background, not content */
         .stApp::before {{
             content: "";
             position: fixed;
@@ -41,7 +42,8 @@ def set_background(image_file):
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.45);
             z-index: 0;
         }}
 
@@ -56,33 +58,36 @@ def set_background(image_file):
 
 set_background("Pentecost_wp.jpg")
 
-# === Custom CSS ===
+# === Custom CSS (lighter text) ===
 st.markdown("""
 <style>
-    .main-header {
+    body, .main-header, .sub-header, .footer, label, p, span, div {{
+        color: #f8f8f8 !important;
+    }}
+
+    .main-header {{
         font-size: 3rem;
-        color: #ffffff;
         font-weight: 700;
         margin: 0;
-        text-shadow: 1px 1px 3px black;
-    }
-    .sub-header {
+        text-shadow: 1px 1px 5px black;
+    }}
+    .sub-header {{
         font-size: 1.2rem;
-        color: #e6e6e6;
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 300;
-        text-shadow: 1px 1px 2px black;
-    }
-    .result-card {
-        background-color: rgba(255,255,255,0.9);
+        text-shadow: 1px 1px 4px black;
+    }}
+    .result-card {{
+        background-color: rgba(255,255,255,0.92);
+        color: #000 !important;
         border-left: 4px solid #1f3d7a;
         padding: 1.5rem;
         margin: 1rem 0;
         border-radius: 0 8px 8px 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    .paragraph-badge {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }}
+    .paragraph-badge {{
         background-color: #1f3d7a;
         color: white;
         padding: 0.3rem 0.8rem;
@@ -91,8 +96,8 @@ st.markdown("""
         font-size: 0.9rem;
         display: inline-block;
         margin-bottom: 0.5rem;
-    }
-    .confidence-badge {
+    }}
+    .confidence-badge {{
         background-color: #28a745;
         color: white;
         padding: 0.3rem 0.8rem;
@@ -100,14 +105,13 @@ st.markdown("""
         font-size: 0.9rem;
         display: inline-block;
         margin-left: 0.5rem;
-    }
-    .footer {
+    }}
+    .footer {{
         text-align: center;
         margin-top: 3rem;
         padding: 1rem;
-        color: #e6e6e6;
-        text-shadow: 1px 1px 2px black;
-    }
+        text-shadow: 1px 1px 4px black;
+    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -183,7 +187,6 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 # === Main App ===
 def main():
 
-    # Header
     st.markdown("""
         <div style="display:flex; align-items:center; justify-content:center; margin-bottom:0.5rem;">
             <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-church-50.png"
@@ -193,7 +196,6 @@ def main():
         <p class="sub-header">A Study Tool for the Catechism of the Catholic Church</p>
     """, unsafe_allow_html=True)
 
-    # Load Models
     encoder, reranker, index, metadata, df = load_models()
     if encoder is None:
         return
@@ -203,7 +205,6 @@ def main():
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
-        # Ask Question header
         st.markdown("""
             <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1rem;">
                 <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png"
@@ -212,11 +213,9 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-        # Initialize
         if "query" not in st.session_state:
             st.session_state.query = ""
 
-        # Input
         query = st.text_input(
             "Enter your theological question:",
             value=st.session_state.query,
@@ -226,7 +225,6 @@ def main():
         )
         st.session_state.query = query
 
-        # Example buttons
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
@@ -241,7 +239,6 @@ def main():
                 if st.button(example, key=f"ex_{i}"):
                     st.session_state.query = example
 
-    # Search Results
     if st.session_state.query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(
@@ -267,7 +264,6 @@ def main():
         else:
             st.warning("No results found. Try rephrasing your question.")
 
-    # Footer
     st.markdown("---")
     st.markdown("""
         <div class="footer">
@@ -275,7 +271,6 @@ def main():
             A resource for deepening understanding of the Catholic faith.
         </div>
     """, unsafe_allow_html=True)
-
 
 if __name__ == "__main__":
     main()
