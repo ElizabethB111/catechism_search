@@ -56,58 +56,100 @@ def set_background(image_file):
 
 set_background("Pentecost_wp.jpg")
 
-# === Custom CSS ===
+# === Custom CSS (Dark Theme) ===
 st.markdown("""
 <style>
+
+    /* ==== TEXT COLORS FOR DARK BACKGROUND ==== */
     .main-header {
         font-size: 3rem;
-        color: #ffffff;
+        color: #f8f8ff;
         font-weight: 700;
         margin: 0;
-        text-shadow: 1px 1px 3px black;
+        text-shadow: 0px 0px 8px rgba(0,0,0,0.9);
     }
+
     .sub-header {
-        font-size: 1.2rem;
-        color: #e6e6e6;
+        font-size: 1.3rem;
+        color: #e5e5e5;
         text-align: center;
         margin-bottom: 2rem;
         font-weight: 300;
-        text-shadow: 1px 1px 2px black;
+        text-shadow: 0px 0px 6px rgba(0,0,0,1);
     }
+
+    /* ==== RESULT CARDS FOR DARK BACKGROUND ==== */
     .result-card {
-        background-color: rgba(255,255,255,0.9);
-        border-left: 4px solid #1f3d7a;
+        background-color: rgba(25, 25, 25, 0.75);
+        border-left: 4px solid #b1c5ff;
         padding: 1.5rem;
         margin: 1rem 0;
-        border-radius: 0 8px 8px 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        border-radius: 0 10px 10px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        color: #f5f5f5;
     }
+
+    /* ==== TAGS ==== */
     .paragraph-badge {
-        background-color: #1f3d7a;
-        color: white;
-        padding: 0.3rem 0.8rem;
+        background-color: #355db5;
+        color: #ffffff;
+        padding: 0.35rem 0.85rem;
         border-radius: 15px;
         font-weight: bold;
         font-size: 0.9rem;
         display: inline-block;
         margin-bottom: 0.5rem;
+        box-shadow: 0px 0px 6px rgba(0,0,0,0.7);
     }
+
     .confidence-badge {
-        background-color: #28a745;
-        color: white;
-        padding: 0.3rem 0.8rem;
+        background-color: #2ea44f;
+        color: #ffffff;
+        padding: 0.35rem 0.85rem;
         border-radius: 15px;
+        font-weight: 500;
         font-size: 0.9rem;
         display: inline-block;
         margin-left: 0.5rem;
+        box-shadow: 0px 0px 6px rgba(0,0,0,0.7);
     }
+
+    /* ==== INPUT FIELD (QUESTION BOX) ==== */
+    input[type="text"] {
+        background-color: rgba(255,255,255,0.85);
+        color: #1b1b1b;
+        border-radius: 10px;
+        padding: 0.8rem;
+        border: 1px solid #ccc;
+        font-size: 1.1rem;
+    }
+
+    /* ==== EXAMPLE BUTTONS ==== */
+    .stButton>button {
+        background-color: #e8ecfa;
+        color: #1a2a5a;
+        border-radius: 10px;
+        border: 1px solid #bfcaf0;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        box-shadow: 0px 0px 5px rgba(0,0,0,0.5);
+    }
+
+    .stButton>button:hover {
+        background-color: #ffffff;
+        border-color: #8ea6e8;
+        color: #102040;
+    }
+
+    /* ==== FOOTER ==== */
     .footer {
         text-align: center;
         margin-top: 3rem;
         padding: 1rem;
-        color: #e6e6e6;
-        text-shadow: 1px 1px 2px black;
+        color: #dddddd;
+        text-shadow: 0px 0px 5px rgba(0,0,0,1);
     }
+
 </style>
 """, unsafe_allow_html=True)
 
