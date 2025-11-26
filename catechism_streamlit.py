@@ -109,14 +109,31 @@ st.markdown("""
         color: #f0f0f0 !important;
         font-weight: bold;
     }
-    [data-testid="stSlider"] .css-1r6slb0 {
+    input[type=range] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 8px;
         background: #1f3d7a !important;
+        border-radius: 5px;
+        outline: none;
     }
-    [data-testid="stSlider"] input[type="range"]::-webkit-slider-thumb {
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
         background: #28a745 !important;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #ffffff;
     }
-    [data-testid="stSlider"] input[type="range"]::-moz-range-thumb {
+    input[type=range]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
         background: #28a745 !important;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid #ffffff;
     }
 </style>
 """, unsafe_allow_html=True)
