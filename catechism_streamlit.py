@@ -223,9 +223,9 @@ def main():
         examples = st.columns(2)
         example_questions = [
             "What is the communion of the saints?",
-            "How can I pray?",
+            "What is God like?",
             "What is the purpose of the sacraments?",
-            "How does one make a good confession?"
+            "How can I make a good confession?"
         ]
 
         for i, example in enumerate(example_questions):
