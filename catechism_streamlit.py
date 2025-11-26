@@ -156,7 +156,7 @@ def main():
                  style="margin-right:15px;">
             <h1 class="main-header">Catechism Search</h1>
         </div>
-        <p class="sub-header">A Semantic Study Tool for the Catechism of the Catholic Church</p>
+        <p class="sub-header">A Study Tool for the Catechism of the Catholic Church</p>
     """, unsafe_allow_html=True)
 
     # Load models
