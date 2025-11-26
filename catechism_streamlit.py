@@ -54,7 +54,7 @@ def set_background(image_file):
         unsafe_allow_html=True
     )
 
-set_background("Pentecost_wp.jpg")
+set_background("background.png")
 
 # === Custom CSS ===
 st.markdown("""
