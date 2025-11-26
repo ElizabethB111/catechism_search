@@ -322,7 +322,8 @@ def main():
     st.markdown("""
         <div class="footer">
             <strong>Catechism Search</strong><br>
-            A resource for deepening understanding of the Catholic faith using SentenceTransformer, FAISS, BM25, and CrossEncoder.
+            A resource for deepening understanding of the Catholic faith 
+            using SentenceTransformer, FAISS, BM25, and CrossEncoder.
         </div>
     """, unsafe_allow_html=True)
 
