@@ -210,7 +210,7 @@ def main():
     # Header (Catechism Search)
     st.markdown("""
         <div style="display:flex; align-items:center; justify-content:center; margin-bottom:0.5rem;">
-            <h1 class="main-header">Catechism Search</h1>
+            <h1 class="main-header">Catechism of the Catholic Church</h1>
         </div>
         <p class="sub-header">&nbsp;</p>
     """, unsafe_allow_html=True)
@@ -228,7 +228,7 @@ def main():
         # Ask Question header (spaced down)
         st.markdown("""
             <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1rem; margin-top:2rem;">
-                <h1 class="main-header">Ask a Question</h1>
+                <h1 class="main-header">Find paragraphs and teachings from the official Catechism</h1>
             </div>
             <p class="sub-header">&nbsp;</p>
         """, unsafe_allow_html=True)
