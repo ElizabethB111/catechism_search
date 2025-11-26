@@ -241,7 +241,12 @@ def main():
             )
 
         if results:
-            st.success(f"Found {len(results)} relevant Catechism passages")
+            # Light "Found X passages" message
+            st.markdown(
+                f'<div style="color:#f8f8f8; font-weight:bold; font-size:1rem; margin-bottom:0.5rem;">'
+                f'Found {len(results)} relevant Catechism passages</div>',
+                unsafe_allow_html=True
+            )
 
             for r in results:
                 st.markdown(
@@ -269,6 +274,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
