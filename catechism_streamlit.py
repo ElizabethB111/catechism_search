@@ -218,6 +218,9 @@ def main():
         )
         st.session_state.query = query
 
+        # Number of results slider
+        num_results = st.slider("Number of results to return", min_value=1, max_value=20, value=5)
+
         # Example buttons
         st.write("**Quick Examples:**")
         examples = st.columns(2)
@@ -237,7 +240,7 @@ def main():
     if st.session_state.query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(
-                st.session_state.query, encoder, reranker, index, metadata, bm25
+                st.session_state.query, encoder, reranker, index, metadata, bm25, top_k=num_results
             )
 
         if results:
