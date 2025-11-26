@@ -266,7 +266,7 @@ def main():
             st.success(f"Found {len(results)} relevant Catechism passages")
 
             for r in results:
-                st.markdown('<div class="result-card">', unsafe_allow_html=True)
+                st.markdown('<div class="result-card" style="color:#f0f0f0;">', unsafe_allow_html=True)
                 st.markdown(
                     f'<span class="paragraph-badge">Paragraph {r["paragraph"]}</span>',
                     unsafe_allow_html=True
