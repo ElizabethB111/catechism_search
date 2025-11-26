@@ -222,6 +222,7 @@ def main():
                      width="50" style="margin-right:15px;">
                 <h1 class="main-header">Ask a Question</h1>
             </div>
+            <p class="sub-header">&nbsp;</p>
         """, unsafe_allow_html=True)
 
         # Initialize
