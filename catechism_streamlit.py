@@ -80,14 +80,6 @@ st.markdown("""
         font-weight: 300;
         text-shadow: 1px 1px 2px black;
     }
-    .result-card {
-        background-color: rgba(255,255,255,0.85);
-        border-left: 4px solid #1f3d7a;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-radius: 0 8px 8px 0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
     .paragraph-badge {
         background-color: #1f3d7a;
         color: #ffffff;
@@ -168,13 +160,10 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
         rerank_scores = reranker.predict(pairs)
 
-        # Convert raw scores to probabilities using sigmoid (optional, not used for display now)
-        prob_scores = [1 / (1 + math.exp(-s)) for s in rerank_scores]
-
-        ranked = sorted(zip([i for i, _ in candidates], prob_scores), key=lambda x: x[1], reverse=True)
+        ranked = sorted(zip([i for i, _ in candidates], rerank_scores), key=lambda x: x[1], reverse=True)
 
         results = []
-        for r, (idx, score) in enumerate(ranked, start=1):
+        for r, (idx, _) in enumerate(ranked, start=1):
             results.append({
                 "rank": r,
                 "paragraph": metadata["paragraph"][idx],
@@ -255,17 +244,15 @@ def main():
             st.success(f"Found {len(results)} relevant Catechism passages")
 
             for r in results:
-                st.markdown('<div class="result-card">', unsafe_allow_html=True)
                 st.markdown(
-                    f'<span class="paragraph-badge">Paragraph {r["paragraph"]}</span>',
+                    f'''
+                    <div class="result-card" style="background-color: rgba(0,0,0,0.6); color: #f8f8f8; padding: 1rem; border-radius: 0 8px 8px 0; margin: 1rem 0;">
+                        <span class="paragraph-badge">Paragraph {r["paragraph"]}</span>
+                        <div style="margin-top:0.5rem; line-height:1.5;">{r["text"]}</div>
+                    </div>
+                    ''',
                     unsafe_allow_html=True
                 )
-                # Light passage text
-                st.markdown(
-                    f'<p style="color:#f5f5f5; line-height:1.5;">{r["text"]}</p>',
-                    unsafe_allow_html=True
-                )
-                st.markdown("</div>", unsafe_allow_html=True)
 
         else:
             st.warning("No results found. Try rephrasing your question.")
