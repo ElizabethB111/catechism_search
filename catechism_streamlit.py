@@ -271,10 +271,7 @@ def main():
                     f'<span class="paragraph-badge">Paragraph {r["paragraph"]}</span>',
                     unsafe_allow_html=True
                 )
-                st.markdown(
-                    f'<span class="confidence-badge">Confidence: {r["score"]:.1%}</span>',
-                    unsafe_allow_html=True
-                )
+            
                 st.write(r["text"])
                 st.markdown("</div>", unsafe_allow_html=True)
 
