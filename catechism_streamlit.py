@@ -202,7 +202,7 @@ def main():
                  width="50" style="margin-right:15px;">
             <h1 class="main-header">Catechism Search</h1>
         </div>
-       
+        <p class="sub-header">A Study Tool for the Catechism of the Catholic Church</p>
     """, unsafe_allow_html=True)
 
     # Load Models
@@ -291,6 +291,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
