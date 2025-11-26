@@ -274,12 +274,12 @@ def main():
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
-            "What is the communion of the saints?",
+            "Why do Catholics pray to Mary?",
             "What is God like?",
             "What is the purpose of the sacraments?",
             "How can I make a good confession?",
-            "What is beauty?",
-            "Why do Catholics pray to Mary?"
+            "What is human dignity?",
+            "What is the significance of the communion of saints?"
         ]
 
         for i, example in enumerate(example_questions):
