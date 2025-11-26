@@ -217,9 +217,8 @@ def main():
     with col2:
         # Ask Question header
         st.markdown("""
-            <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1rem;">
-                <img src="https://raw.githubusercontent.com/ElizabethB111/catechism_search/main/icons8-bible-50.png"
-                     width="50" style="margin-right:15px;">
+            <div style="display:flex; align-items:center; justify-content:center; margin-bottom:1rem; margin-top:2rem;">
+                
                 <h1 class="main-header">Ask a Question</h1>
             </div>
             <p class="sub-header">&nbsp;</p>
