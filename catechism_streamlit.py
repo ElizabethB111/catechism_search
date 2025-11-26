@@ -18,6 +18,15 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# Override theme colors for slider
+st.markdown("""
+    <style>
+    :root {
+        --primary-color: #ffffff;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # === Background Image ===
 def set_background(image_file):
     with open(image_file, "rb") as f:
@@ -201,7 +210,7 @@ def main():
     # Header (Catechism Search)
     st.markdown("""
         <div style="display:flex; align-items:center; justify-content:center; margin-bottom:0.5rem;">
-            <h1 class="main-header">Catechism of the Catholic Church</h1>
+            <h1 class="main-header">Catechism Search</h1>
         </div>
         <p class="sub-header">&nbsp;</p>
     """, unsafe_allow_html=True)
@@ -308,7 +317,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 
