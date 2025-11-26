@@ -103,6 +103,15 @@ st.markdown("""
         color: #111 !important;
         font-weight: 600;
     }
+
+    /* Style the slider to be white */
+    .stSlider > div > div > div {
+        color: #f8f8f8 !important;
+    }
+    .stSlider label {
+        color: #f8f8f8 !important;
+        font-weight: 500;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -207,6 +216,19 @@ def main():
         # Initialize
         if "query" not in st.session_state:
             st.session_state.query = ""
+        if "num_results" not in st.session_state:
+            st.session_state.num_results = 5
+
+        # Number of results slider
+        num_results = st.slider(
+            "Number of results to display:",
+            min_value=1,
+            max_value=20,
+            value=st.session_state.num_results,
+            step=1,
+            key="num_results_slider"
+        )
+        st.session_state.num_results = num_results
 
         # Input
         query = st.text_input(
@@ -237,7 +259,8 @@ def main():
     if st.session_state.query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(
-                st.session_state.query, encoder, reranker, index, metadata, bm25
+                st.session_state.query, encoder, reranker, index, metadata, bm25,
+                top_k=st.session_state.num_results
             )
 
         if results:
@@ -274,7 +297,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 
 
 
