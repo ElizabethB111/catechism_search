@@ -18,6 +18,52 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# === Override theme colors via :root for slider track and thumb ===
+st.markdown("""
+<style>
+:root {
+    --primary-color: #1f3d7a;   /* slider track */
+    --secondary-color: #28a745; /* slider thumb */
+}
+
+/* Slider label white */
+[data-testid="stSlider"] label {
+    color: #f0f0f0 !important;
+    font-weight: bold;
+}
+
+/* Full slider track & thumb override for modern browsers */
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #1f3d7a !important;
+    border-radius: 5px;
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #28a745 !important;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #28a745 !important;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # === Background Image ===
 def set_background(image_file):
     with open(image_file, "rb") as f:
@@ -33,8 +79,6 @@ def set_background(image_file):
             background-repeat: no-repeat;
             background-attachment: fixed;
         }}
-
-        /* Dark overlay for readability */
         .stApp::before {{
             content: "";
             position: fixed;
@@ -45,7 +89,6 @@ def set_background(image_file):
             background: rgba(0,0,0,0.35);
             z-index: 0;
         }}
-
         .main > div {{
             position: relative;
             z-index: 1;
@@ -57,84 +100,49 @@ def set_background(image_file):
 
 set_background("Pentecost_wp.jpg")
 
-# === Custom CSS ===
+# === Custom CSS for text, buttons, and results ===
 st.markdown("""
 <style>
-    /* Global light text */
-    body, .stApp, .main > div {
-        color: #f0f0f0 !important;
-    }
+body, .stApp, .main > div {
+    color: #f0f0f0 !important;
+}
 
-    .main-header {
-        font-size: 3rem;
-        color: #f8f8ff;
-        font-weight: 700;
-        margin: 0;
-        text-shadow: 1px 1px 3px black;
-    }
-    .sub-header {
-        font-size: 1.2rem;
-        color: #f0f0f0;
-        text-align: center;
-        margin-bottom: 2rem;
-        font-weight: 300;
-        text-shadow: 1px 1px 2px black;
-    }
-    .paragraph-badge {
-        background-color: #1f3d7a;
-        color: #ffffff;
-        padding: 0.3rem 0.8rem;
-        border-radius: 15px;
-        font-weight: bold;
-        font-size: 0.9rem;
-        display: inline-block;
-        margin-bottom: 0.5rem;
-    }
-    .footer {
-        text-align: center;
-        margin-top: 3rem;
-        padding: 1rem;
-        color: #f0f0f0;
-        text-shadow: 1px 1px 2px black;
-    }
-
-    /* Make all Streamlit buttons have dark text */
-    .stButton>button {
-        color: #111 !important;
-        font-weight: 600;
-    }
-
-    /* Slider styling */
-    [data-testid="stSlider"] label {
-        color: #f0f0f0 !important;
-        font-weight: bold;
-    }
-    input[type=range] {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 8px;
-        background: #1f3d7a !important;
-        border-radius: 5px;
-        outline: none;
-    }
-    input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 20px;
-        height: 20px;
-        background: #28a745 !important;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid #ffffff;
-    }
-    input[type=range]::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        background: #28a745 !important;
-        border-radius: 50%;
-        cursor: pointer;
-        border: 2px solid #ffffff;
-    }
+.main-header {
+    font-size: 3rem;
+    color: #f8f8ff;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 1px 1px 3px black;
+}
+.sub-header {
+    font-size: 1.2rem;
+    color: #f0f0f0;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    text-shadow: 1px 1px 2px black;
+}
+.paragraph-badge {
+    background-color: #1f3d7a;
+    color: #ffffff;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+.footer {
+    text-align: center;
+    margin-top: 3rem;
+    padding: 1rem;
+    color: #f0f0f0;
+    text-shadow: 1px 1px 2px black;
+}
+.stButton>button {
+    color: #111 !important;
+    font-weight: 600;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -191,7 +199,6 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         pairs = [(query, metadata["text"][i]) for i, _ in candidates]
 
         rerank_scores = reranker.predict(pairs)
-
         ranked = sorted(zip([i for i, _ in candidates], rerank_scores), key=lambda x: x[1], reverse=True)
 
         results = []
@@ -236,11 +243,9 @@ def main():
             <p class="sub-header">&nbsp;</p>
         """, unsafe_allow_html=True)
 
-        # Initialize
         if "query" not in st.session_state:
             st.session_state.query = ""
 
-        # Input
         query = st.text_input(
             "Enter your theological question:",
             value=st.session_state.query,
@@ -258,7 +263,6 @@ def main():
             value=5
         )
 
-        # Example buttons
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
@@ -281,7 +285,6 @@ def main():
             )
 
         if results:
-            # Light "Found X passages" message
             st.markdown(
                 f'<div style="color:#f8f8f8; font-weight:bold; font-size:1rem; margin-bottom:0.5rem;">'
                 f'Found {len(results)} relevant Catechism passages</div>',
@@ -298,11 +301,9 @@ def main():
                     ''',
                     unsafe_allow_html=True
                 )
-
         else:
             st.warning("No results found. Try rephrasing your question.")
 
-    # Footer
     st.markdown("---")
     st.markdown("""
         <div class="footer">
