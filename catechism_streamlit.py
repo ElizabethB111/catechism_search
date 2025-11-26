@@ -278,7 +278,7 @@ def main():
             "What is God like?",
             "What is the purpose of the sacraments?",
             "How can I make a good confession?",
-            "What is beauty?"
+            "What is beauty?",
             "Why do Catholics pray to Mary?"
         ]
 
