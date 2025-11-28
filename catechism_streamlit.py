@@ -139,7 +139,7 @@ st.markdown("""
 @st.cache_resource
 def load_models():
     try:
-        df = pd.read_csv("catechism_corpus_clean.csv")
+        df = pd.read_csv("catechism_clean_structured.csv")
         df.dropna(subset=["text"], inplace=True)
 
         encoder = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
