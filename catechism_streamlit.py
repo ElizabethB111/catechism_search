@@ -324,6 +324,8 @@ def main():
             <strong>Catechism Search</strong><br>
             A resource for deepening understanding of the Catholic faith 
             using SentenceTransformer, FAISS, BM25, and CrossEncoder.
+
+            Source: https://olmca.org/ourpages/users/evillasenor/CatechismCatholicChurch2ndEdition.pdf
         </div>
     """, unsafe_allow_html=True)
 
