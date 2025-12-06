@@ -43,7 +43,6 @@ def set_background(image_file):
             background-attachment: fixed;
         }}
 
-        /* Dark overlay for readability */
         .stApp::before {{
             content: "";
             position: fixed;
@@ -69,10 +68,7 @@ set_background("Pentecost_wp.jpg")
 # === Custom CSS ===
 st.markdown("""
 <style>
-    /* Global light text */
-    body, .stApp, .main > div {
-        color: #f0f0f0 !important;
-    }
+    body, .stApp, .main > div { color: #f0f0f0 !important; }
 
     .main-header {
         font-size: 3rem;
@@ -107,22 +103,18 @@ st.markdown("""
         text-shadow: 1px 1px 2px black;
     }
 
-    .stButton>button {
-        color: #111 !important;
-        font-weight: 600;
-    }
+    .stButton>button { color: #111 !important; font-weight: 600; }
 
-    .stSlider label {
-        color: #f8f8f8 !important;
-        font-weight: 500;
-        text-shadow: 1px 1px 2px black;
-    }
+    .stSlider label { color: #f8f8f8 !important; font-weight: 500; text-shadow: 1px 1px 2px black; }
+
     .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"] {
         color: #f8f8f8 !important;
     }
+
     .stSlider [data-baseweb="slider"] > div > div > div > div {
         background-color: #ffffff !important;
     }
+
     .stSlider [data-baseweb="slider"] > div > div > div > div[role="slider"] {
         background-color: #ffffff !important;
         box-shadow: 0 0 0 2px #ffffff !important;
@@ -182,21 +174,24 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
         candidates = sorted(combined.items(), key=lambda x: x[1], reverse=True)[:top_k]
         pairs = [(query, metadata["text"][i]) for i, _ in candidates]
 
-        rerank_scores = reranker.predict(pairs)
+        raw_scores = reranker.predict(pairs)
+
+        # === FIX: convert logits to probabilities (0–1) ===
+        probs = 1 / (1 + np.exp(-raw_scores))
 
         ranked = sorted(
-            zip([i for i, _ in candidates], rerank_scores),
+            zip([i for i, _ in candidates], probs),
             key=lambda x: x[1],
             reverse=True
         )
 
         results = []
-        for r, (idx, score) in enumerate(ranked, start=1):
+        for r, (idx, prob) in enumerate(ranked, start=1):
             results.append({
                 "rank": r,
                 "paragraph": metadata["paragraph"][idx],
                 "text": metadata["text"][idx],
-                "score": float(score)  # ✅ FIX: Add score so UI can display confidence
+                "score": float(prob)       # normalized to 0–1
             })
         return results
 
@@ -206,7 +201,6 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
 # === Main App ===
 def main():
-
     st.markdown("""
         <div style="display:flex; align-items:center; justify-content:center; margin-bottom:0.5rem;">
             <h1 class="main-header">Catechism of the Catholic Church</h1>
@@ -303,8 +297,10 @@ def main():
                     ''',
                     unsafe_allow_html=True
                 )
+
+                # Display as % (0–100%)
                 st.markdown(
-                    f'<span class="confidence-badge">Confidence: {r["score"]:.1%}</span>',
+                    f'<span class="confidence-badge">Confidence: {r["score"]*100:.1f}%</span>',
                     unsafe_allow_html=True
                 )
 
@@ -325,6 +321,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
