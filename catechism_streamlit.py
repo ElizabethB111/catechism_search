@@ -313,6 +313,10 @@ def main():
                     ''',
                     unsafe_allow_html=True
                 )
+                st.markdown(
+                    f'<span class="confidence-badge">Confidence: {r["score"]:.1%}</span>',
+                    unsafe_allow_html=True
+                )
 
         else:
             st.warning("No results found. Try rephrasing your question.")
