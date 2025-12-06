@@ -107,27 +107,22 @@ st.markdown("""
         text-shadow: 1px 1px 2px black;
     }
 
-    /* Make all Streamlit buttons have dark text */
     .stButton>button {
         color: #111 !important;
         font-weight: 600;
     }
 
-    /* Style the slider to be white */
     .stSlider label {
         color: #f8f8f8 !important;
         font-weight: 500;
         text-shadow: 1px 1px 2px black;
     }
-    /* Change the slider track color */
     .stSlider [data-baseweb="slider"] [data-testid="stThumbValue"] {
         color: #f8f8f8 !important;
     }
-    /* Change the active/filled portion of the slider */
     .stSlider [data-baseweb="slider"] > div > div > div > div {
         background-color: #ffffff !important;
     }
-    /* Change the slider thumb (circle) */
     .stSlider [data-baseweb="slider"] > div > div > div > div[role="slider"] {
         background-color: #ffffff !important;
         box-shadow: 0 0 0 2px #ffffff !important;
@@ -189,14 +184,19 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 
         rerank_scores = reranker.predict(pairs)
 
-        ranked = sorted(zip([i for i, _ in candidates], rerank_scores), key=lambda x: x[1], reverse=True)
+        ranked = sorted(
+            zip([i for i, _ in candidates], rerank_scores),
+            key=lambda x: x[1],
+            reverse=True
+        )
 
         results = []
-        for r, (idx, _) in enumerate(ranked, start=1):
+        for r, (idx, score) in enumerate(ranked, start=1):
             results.append({
                 "rank": r,
                 "paragraph": metadata["paragraph"][idx],
-                "text": metadata["text"][idx]
+                "text": metadata["text"][idx],
+                "score": float(score)  # ✅ FIX: Add score so UI can display confidence
             })
         return results
 
@@ -207,7 +207,6 @@ def hybrid_search(query, encoder, reranker, index, metadata, bm25, top_k=5):
 # === Main App ===
 def main():
 
-    # Header (Catechism Search)
     st.markdown("""
         <div style="display:flex; align-items:center; justify-content:center; margin-bottom:0.5rem;">
             <h1 class="main-header">Catechism of the Catholic Church</h1>
@@ -215,7 +214,6 @@ def main():
         <p class="sub-header">&nbsp;</p>
     """, unsafe_allow_html=True)
 
-    # Load Models
     encoder, reranker, index, metadata, df = load_models()
     if encoder is None:
         return
@@ -225,7 +223,6 @@ def main():
     col1, col2, col3 = st.columns([1, 2, 1])
 
     with col2:
-        # Small subtitle
         st.markdown("""
             <div style="text-align: center; margin-bottom: 2rem;">
                 <p style="color: #f0f0f0; font-size: 1.1rem; font-weight: 300; text-shadow: 1px 1px 2px black;">
@@ -234,7 +231,6 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-        # Ask Question header
         st.markdown("""
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <h2 style="color: #f8f8ff; font-weight: 600; text-shadow: 1px 1px 2px black;">
@@ -243,13 +239,11 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-        # Initialize
         if "query" not in st.session_state:
             st.session_state.query = ""
         if "num_results" not in st.session_state:
             st.session_state.num_results = 5
 
-        # Number of results slider
         num_results = st.slider(
             "Number of results to display:",
             min_value=1,
@@ -260,7 +254,6 @@ def main():
         )
         st.session_state.num_results = num_results
 
-        # Input
         query = st.text_input(
             "Enter your theological question:",
             value=st.session_state.query,
@@ -270,7 +263,6 @@ def main():
         )
         st.session_state.query = query
 
-        # Example buttons
         st.write("**Quick Examples:**")
         examples = st.columns(2)
         example_questions = [
@@ -287,7 +279,6 @@ def main():
                 if st.button(example, key=f"ex_{i}"):
                     st.session_state.query = example
 
-    # === Search Results ===
     if st.session_state.query:
         with st.spinner("🔍 Searching 3,260 Catechism paragraphs..."):
             results = hybrid_search(
@@ -296,7 +287,6 @@ def main():
             )
 
         if results:
-            # Light "Found X passages" message
             st.markdown(
                 f'<div style="color:#f8f8f8; font-weight:bold; font-size:1rem; margin-bottom:0.5rem;">'
                 f'Found {len(results)} relevant Catechism passages</div>',
@@ -321,7 +311,6 @@ def main():
         else:
             st.warning("No results found. Try rephrasing your question.")
 
-    # Footer
     st.markdown("---")
     st.markdown("""
         <div class="footer">
@@ -336,6 +325,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
