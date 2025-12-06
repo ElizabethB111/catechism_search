@@ -18,7 +18,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Override theme colors for slider
+# theme colors for slider
 st.markdown("""
     <style>
     :root {
@@ -65,7 +65,7 @@ def set_background(image_file):
 
 set_background("Pentecost_wp.jpg")
 
-# === Custom CSS ===
+# === CSS ===
 st.markdown("""
 <style>
     body, .stApp, .main > div { color: #f0f0f0 !important; }
