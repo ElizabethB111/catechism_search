@@ -298,11 +298,7 @@ def main():
                     unsafe_allow_html=True
                 )
 
-                # Display as % (0–100%)
-                st.markdown(
-                    f'<span class="confidence-badge">Confidence: {r["score"]*100:.1f}%</span>',
-                    unsafe_allow_html=True
-                )
+
 
         else:
             st.warning("No results found. Try rephrasing your question.")
