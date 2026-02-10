@@ -24,7 +24,7 @@ This tool is intended for **educational and exploratory purposes only** and does
 
 The main page allows users to enter a free-form question, adjust the number of results to display, and select from example questions covering common theological topics.
 
-![Main Search Page](images/landing.png)
+![Main Search Page](./images/landing.png)
 
 ---
 
@@ -32,7 +32,7 @@ The main page allows users to enter a free-form question, adjust the number of r
 
 Search results display ranked Catechism paragraphs that are most relevant to the user’s question, based on combined lexical and semantic scoring.
 
-![Results View](images/answers.png)
+![Results View](./images/answers.png)
 
 ---
 
