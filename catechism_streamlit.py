@@ -63,7 +63,7 @@ def set_background(image_file):
         unsafe_allow_html=True
     )
 
-set_background("Pentecost_wp.jpg")
+set_background("images/Pentecost_wp.jpg")
 
 # === CSS ===
 st.markdown("""
@@ -126,7 +126,7 @@ st.markdown("""
 @st.cache_resource
 def load_models():
     try:
-        df = pd.read_csv("catechism_clean_structured.csv")
+        df = pd.read_csv("data/catechism_clean_structured.csv")
         df.dropna(subset=["text"], inplace=True)
 
         encoder = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
