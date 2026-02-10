@@ -1,64 +1,76 @@
-Catechism of the Catholic Church Search
+# Catechism of the Catholic Church Search
 
-A semantic search application for exploring the Catechism of the Catholic Church using modern natural language processing techniques. This project enables users to ask theological and doctrinal questions in natural language and retrieve relevant Catechism paragraphs ranked by semantic relevance.
+A semantic search application for exploring the *Catechism of the Catholic Church* using modern natural language processing techniques. This project enables users to ask theological and doctrinal questions in natural language and retrieve relevant Catechism paragraphs ranked by semantic relevance.
 
-The application is built with Python and Streamlit, and combines dense vector search, sparse retrieval, and cross-encoder re-ranking for improved accuracy and interpretability.
+The application is built with **Python** and **Streamlit**, and combines dense vector search, sparse retrieval, and cross-encoder re-ranking for improved accuracy and interpretability.
 
-Overview
+---
 
-The Catechism of the Catholic Church is a comprehensive and authoritative summary of Catholic teaching, but its depth and structure can make intuitive searching difficult. This project aims to support learning and exploration by allowing users to:
+## Overview
 
-Ask natural-language questions about Catholic doctrine and practice
+The *Catechism of the Catholic Church* is a comprehensive and authoritative summary of Catholic teaching, but its depth and structure can make intuitive searching difficult. This project aims to support learning and exploration by allowing users to:
 
-Retrieve relevant Catechism paragraphs beyond exact keyword matches
+- Ask natural-language questions about Catholic doctrine and practice  
+- Retrieve relevant Catechism paragraphs beyond exact keyword matches  
+- Explore Church teaching in a structured, searchable, and transparent way  
 
-Explore Church teaching in a structured, searchable, and transparent way
+This tool is intended for **educational and exploratory purposes only** and does not replace official Church teaching, pastoral guidance, or spiritual direction.
 
-This tool is intended for educational and exploratory purposes only and does not replace official Church teaching, pastoral guidance, or spiritual direction.
+---
 
-Application Interface
-Main Search Page
+## Application Interface
+
+### Main Search Page
 
 The main page allows users to enter a free-form question, adjust the number of results to display, and select from example questions covering common theological topics.
 
-Results View
+![Main Search Page](images/overview.png)
+
+---
+
+### Results View
 
 Search results display ranked Catechism paragraphs that are most relevant to the user’s question, based on combined lexical and semantic scoring.
 
-How the Search Works
+![Results View](images/answers.png)
+
+---
+
+## How the Search Works
 
 The application uses a hybrid retrieval pipeline:
 
-BM25 (Lexical Search)
+### BM25 (Lexical Search)
 Provides strong baseline retrieval for exact terms and doctrinal language commonly used in the Catechism.
 
-SentenceTransformer Embeddings
+### SentenceTransformer Embeddings
 Encodes Catechism paragraphs and user queries into dense vector representations to capture semantic meaning.
 
-FAISS Vector Index
+### FAISS Vector Index
 Enables efficient similarity search across all Catechism embeddings.
 
-CrossEncoder Re-ranking
+### CrossEncoder Re-ranking
 Re-scores top candidate passages to improve contextual accuracy and ranking quality.
 
 This combination balances precision, recall, and theological fidelity.
 
-Tech Stack
+---
 
-Python
+## Tech Stack
 
-Streamlit
+- Python  
+- Streamlit  
+- SentenceTransformers  
+- FAISS  
+- BM25  
+- CrossEncoder  
+- NumPy / Pandas  
 
-SentenceTransformers
+---
 
-FAISS
+## Repository Structure
 
-BM25
-
-CrossEncoder
-
-NumPy / Pandas
-
+```text
 catechism_search/
 ├── .streamlit/
 │   └── config.toml
@@ -69,18 +81,18 @@ catechism_search/
 │   ├── catechism_faiss.index
 │   └── catechism_metadata.pkl
 ├── images/
-│   ├── main_page.png
+│   ├── overview.png
 │   └── answers.png
 ├── catechism_streamlit.py
 ├── requirements.txt
 ├── LICENSE
 └── README.md
 
-License
+## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-Notes and Limitations
+## Notes and Limitations
 
 Search results reflect similarity and relevance, not doctrinal priority or completeness
 
