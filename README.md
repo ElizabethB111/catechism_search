@@ -4,6 +4,8 @@ A semantic search application for exploring the *Catechism of the Catholic Churc
 
 The application is built with **Python** and **Streamlit**, and combines dense vector search, sparse retrieval, and cross-encoder re-ranking for improved accuracy and interpretability.
 
+https://catechismquestion.streamlit.app/ 
+
 ---
 
 ## Overview
